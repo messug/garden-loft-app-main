@@ -1,0 +1,94 @@
+// 
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.facebook.react"
+
+def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
+
+/**
+ * This is the configuration block to customize your React Native Android app.
+ * By default you don't need to apply any configuration, just uncomment the lines you need.
+ */
+react {
+    entryFile = file(["node", "-e", "require('expo/scripts/resolveAppEntry')", projectRoot, "android", "absolute"].execute(null, rootDir).text.trim())
+    reactNativeDir = new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsoluteFile()
+    hermesCommand = new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsolutePath() + "/sdks/hermesc/%OS-BIN%/hermesc"
+    codegenDir = new File(["node", "--print", "require.resolve('@react-native/codegen/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim()).getParentFile().getAbsoluteFile()
+
+    // Use Expo CLI to bundle the app, this ensures the Metro config
+    // works correctly with Expo projects.
+    cliFile = new File(["node", "--print", "require.resolve('@expo/cli', { paths: [require.resolve('expo/package.json')] })"].execute(null, rootDir).text.trim())
+    bundleCommand = "export:embed"
+}
+
+/**
+ * Explicitly set hermesEnabled to false to disable Hermes.
+ */
+def hermesEnabled = false
+
+android {
+    // Your existing configuration remains unchanged
+    ...
+}
+
+dependencies {
+    // Conditional implementation based on hermesEnabled flag
+    if (hermesEnabled) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
+    }
+    ...
+}
+
+// Rest of your configuration remains unchanged
+// Rest of the android configuration
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.messi_geb.gardenloftapp"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+    }
+    // Specify your project's React Native configuration
+    project.ext.react = [
+        entryFile: "index.js",
+        enableHermes: false  // false to disable Hermes, true to enable
+    ]
+}
+
+dependencies {
+    // Ensure you replace these with the actual dependencies and versions your project requires
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.android.tools.build:gradle:4.0.1"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // React Native and Hermesnpmn
+    implementation "com.facebook.react:react-native:+"
+    if (hermesEnabled) {
+        implementation "com.facebook.react:hermes-engine:+"
+    } else {
+        implementation "org.webkit:android-jsc:+"
+    }
+
+    // Add any other dependencies your project requires here
+}
+
+// Apply the react-native-gradle plugin, which will generate the correct entry files,
+// bundle your JavaScript code and assets, and compile everything into a native Android app.
+apply from: "../../node_modules/react-native/react.gradle"
+
+// Add this line if you're using React Native's autolinking feature.
+apply from: "../../node_modules/react-native-unimodules/gradle.groovy"
+
+// Make sure this is at the end of your file
+apply plugin: 'com.google.gms.google-services'

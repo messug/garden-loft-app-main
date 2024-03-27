@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1038478112123",
+    "project_id": "vloft-ce9b7",
+    "storage_bucket": "vloft-ce9b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038478112123:android:06c0e19da911dac4b0f9de",
+        "android_client_info": {
+          "package_name": "com.messi_geb.gardenloftapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHaLJOmGZW0n5yoXkgtS4q5D5GOoPtJ_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
