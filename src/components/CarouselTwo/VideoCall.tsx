@@ -143,6 +143,7 @@
 
 
 import React, { useState, useRef, useEffect } from 'react';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions, PermissionsAndroid } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
